@@ -25,7 +25,11 @@ app.use(
         ].join(" ");
     })
 );
-
+app.get("/agent/:id", (req, res) => {
+    Broker.find({ licenseId: req.params.id }).then((result) => {
+        res.json(result);
+    });
+});
 app.get("/cities", (req, res) => {
     Broker.distinct("city").then((cities) => {
         res.json(cities);
@@ -39,6 +43,17 @@ app.get("/agents/", (req, res) => {
         res.json(result);
     });
 });
+app.put("/agent/:id/edit", (req, res) => {
+    const id = req.params.id;
+    const newCity = req.body.city;
+    console.log(id, newCity);
+    Broker.updateMany({ licenseId: id }, { $set: { city: newCity } }).then(
+        (result) => {
+            res.json(result);
+        }
+    );
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on Port ${PORT}`);
