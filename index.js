@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
+const urlencode = require("urlencode");
 const Broker = require("./models/database"); //change to whatever it will be
 require("dotenv").config();
 app.use(cors());
@@ -31,6 +32,13 @@ app.get("/cities", (req, res) => {
     });
 });
 
+app.get("/agents/", (req, res) => {
+    const city = req.query.city;
+
+    Broker.find({ city: city }).then((result) => {
+        res.json(result);
+    });
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on Port ${PORT}`);
